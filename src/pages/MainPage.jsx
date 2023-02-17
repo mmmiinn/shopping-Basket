@@ -8,7 +8,7 @@ import OrderList from "../components/OrderList";
 const MainPage = () => {
   const [productData, setProductData] = useState([]);
   const [orders, setOrders] = useState([]);
-  console.log(orders);
+
   useEffect(() => {
     (async () => {
       try {
@@ -26,9 +26,29 @@ const MainPage = () => {
   }, []);
 
   const handleProductClick = (list) => {
-    //const selectIndex = orders.findIndex((order) => order.id === list.id);
-    const newOrders = [...orders, { ...list, count: 1 }];
-    newOrders.sort((a, b) => a.id - b.id);
+    const selectIndex = orders.findIndex((order) => order.id === list.id);
+
+    if (selectIndex !== -1) return;
+
+    const updateOrders = [...orders, { ...list, count: 1 }];
+    setOrders(updateOrders);
+  };
+
+  const handleOrderChange = (list, value) => {
+    const selectIndex = orders.findIndex((order) => order.id === list.id);
+    const baseOrders = { ...orders, [selectIndex]: { ...list, count: value } };
+
+    setOrders(Object.values(baseOrders));
+  };
+
+  const handleOrdersRemove = (id) => {
+    const newOrders = orders.reduce((res, cur) => {
+      if (id === cur.id) {
+        return res;
+      }
+      return [...res, cur];
+    }, []);
+
     setOrders(newOrders);
   };
 
@@ -44,7 +64,12 @@ const MainPage = () => {
           {orders.length ? (
             <>
               {orders.map((order) => (
-                <OrderList key={order.id} data={order} />
+                <OrderList
+                  key={order.id}
+                  data={order}
+                  onRemove={handleOrdersRemove}
+                  onUpdate={handleOrderChange}
+                />
               ))}
             </>
           ) : (

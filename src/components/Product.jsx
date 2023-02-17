@@ -5,13 +5,13 @@ const Product = (props) => {
   return (
     <>
       {data &&
-        data.map((list) => (
-          <React.Fragment key={list.id}>
+        data.map((item) => (
+          <React.Fragment key={item.id}>
             <button
-              className="product_item"
-              onClick={() => onProductClick(list)}
+              className="product_item product_check"
+              onClick={() => onProductClick(item)}
             >
-              {list.name}
+              {item.name}
             </button>
           </React.Fragment>
         ))}
